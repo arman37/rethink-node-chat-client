@@ -33,3 +33,19 @@
     z-index: 2;
     background-color: rgba(0, 0, 0, 0.6);
 }
+div.online__users {
+    width: 20%;
+    display: inline-block;
+    float: left;
+    border-style: inset;
+}
+div.room__list {
+    width: 20%;
+    display: inline-block;
+    float: right;
+    border-style: outset;
+    padding: 10px;
+}
+div.online__users .title, div.room__list .title {
+    text-align: center;
+}

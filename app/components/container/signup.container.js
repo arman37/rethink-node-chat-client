@@ -25,7 +25,6 @@ class SignUpContainer extends React.Component {
 
     handleSubmit(e) {
         e.preventDefault();
-        console.log(this.state);
         $ajax({
           url: 'sign-up',
           method: 'POST',

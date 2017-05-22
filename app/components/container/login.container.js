@@ -18,13 +18,12 @@ class LoginContainer extends Component {
         };
     }
 
-    handleChange(field, value) {
-        this.setState({[field]: value});
+    handleChange(field, evt) {
+      this.setState({[field]: evt.target.value});
     }
 
     handleSubmit(e) {
         e.preventDefault();
-        console.log(this.state);
         this.context.router.history.push('/main', {id: this.state.password});
         // fetch(`${API_URL}/login`, {
         //     method: 'GET',
