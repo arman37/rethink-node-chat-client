@@ -22,7 +22,8 @@ class MainContent extends React.Component {
       roomName: '',
       progress: false,
       confirmOpen: false,
-      confirmMessage: ''
+      confirmMessage: '',
+      currentRoom: {}
     };
 
     socket = io.connect('http://127.0.0.1:5000');
@@ -74,6 +75,11 @@ class MainContent extends React.Component {
     this.setState({confirmOpen: true, confirmMessage: message});
   }
 
+  handleRoomClick(room) {
+    console.log(room);
+    this.setState({currentRoom: room});
+  }
+
   handleSubmit() {
     $ajax({
       url: 'room',
@@ -103,12 +109,14 @@ class MainContent extends React.Component {
       <Main
         progress={this.state.progress}
         createRoom={this.state.createRoom}
+        currentRoom={this.state.currentRoom}
         confirmOpen={this.state.confirmOpen}
         chatRoomList={this.state.chatRoomList}
         confirmMessage={this.state.confirmMessage}
         connectedUsers={this.state.connectedUsers}
         handleChange={this.handleChange.bind(this)}
         handleSubmit={this.handleSubmit.bind(this)}
+        handleRoomClick={this.handleRoomClick.bind(this)}
         handleCreateRoomOpen={this.handleCreateRoomOpen.bind(this)} />
     )
   }

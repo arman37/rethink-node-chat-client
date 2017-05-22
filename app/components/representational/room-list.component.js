@@ -12,7 +12,7 @@ import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bu
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 
-const RoomList = ({progress, chatRoomList, handleCreateRoomOpen}) => (
+const RoomList = ({progress, chatRoomList, handleCreateRoomOpen, handleRoomClick}) => (
   <div className="room__list">
     <span className="title">Chat Rooms</span>
     {
@@ -21,7 +21,7 @@ const RoomList = ({progress, chatRoomList, handleCreateRoomOpen}) => (
     <List>
       {
         chatRoomList.map((room, index) => (
-          <ListItem primaryText={room.name} rightIcon={<CommunicationChatBubble />} key={index} />
+          <ListItem primaryText={room.name} rightIcon={<CommunicationChatBubble />} onClick={handleRoomClick.bind(null, room)} key={index} />
         ))
       }
     </List>
