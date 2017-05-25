@@ -67,6 +67,7 @@ div.chat__box {
 div.message__list {
     width: 100%;
     height: 88%;
+    overflow-y: scroll;
 }
 div.type__box {
     width: 100%;

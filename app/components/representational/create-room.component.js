@@ -10,7 +10,7 @@ import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 
-const CreateRoom = ({createRoom, handleCreateRoomOpen, handleChange, handleSubmit}) => {
+const CreateRoom = ({createRoom, handleCreateRoomOpen, handleChange, handleRoomSubmit}) => {
   let actions = [
     <FlatButton
       label="Cancel"
@@ -21,7 +21,7 @@ const CreateRoom = ({createRoom, handleCreateRoomOpen, handleChange, handleSubmi
       label="Submit"
       primary={true}
       keyboardFocused={true}
-      onTouchTap={handleSubmit}
+      onTouchTap={handleRoomSubmit}
     />,
   ];
 

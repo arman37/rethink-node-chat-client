@@ -12,14 +12,17 @@ import Messages from './messages.component';
 import CreateRoom from './create-room.component';
 import Confirmation from './confirmation.component';
 
-const MainContent = ({progress, chatRoomList, currentRoom, createRoom, handleChange, handleRoomClick, confirmOpen, confirmMessage, handleSubmit, connectedUsers, handleCreateRoomOpen}) => (
+const MainContent = ({state, progress,newMessage, chatRoomList, currentRoom, createRoom, handleChange, handleMessageSend, handleRoomClick, confirmOpen, confirmMessage, handleRoomSubmit, connectedUsers, handleCreateRoomOpen}) => (
   <div className="main__content">
     <div className="list__view">
       <UserList
         connectedUsers={connectedUsers} />
       <Messages
+        state={state}
+        newMessage={newMessage}
         currentRoom={currentRoom}
-        handleChange={handleChange} />
+        handleChange={handleChange}
+        handleMessageSend={handleMessageSend} />
       <RoomList
         progress={progress}
         chatRoomList={chatRoomList}
@@ -29,7 +32,7 @@ const MainContent = ({progress, chatRoomList, currentRoom, createRoom, handleCha
     <CreateRoom
       createRoom={createRoom}
       handleChange={handleChange}
-      handleSubmit={handleSubmit}
+      handleRoomSubmit={handleRoomSubmit}
       handleCreateRoomOpen={handleCreateRoomOpen} />
     <Confirmation
       confirmOpen={confirmOpen}

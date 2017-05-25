@@ -27,12 +27,20 @@ let _parseJSON = (response) => {
     return response.json()
 };
 
+let _extend = (obj, src) => {
+  for (var key in src) {
+    if (src.hasOwnProperty(key)) obj[key] = src[key];
+  }
+  return obj;
+};
+
 export default (config) => {
-    const {url, method, body} = config;
+    let {url, method, body, header = {}} = config;
+    header = _extend(API_HEADERS, header);
     console.log(`calling at: ${API_URL}/${url}`);
     return fetch(`${API_URL}/${url}`, {
         method: method,
-        headers: API_HEADERS,
+        headers: header,
         body: body ? JSON.stringify(body) : null
     })
     .then(_checkStatus)

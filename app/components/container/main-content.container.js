@@ -13,7 +13,7 @@ import Main from '../representational/main-content.component';
 let socket;
 
 class MainContent extends React.Component {
-  constructor(){
+  constructor() {
     super(...arguments);
     this.state = {
       connectedUsers: [],
@@ -23,6 +23,7 @@ class MainContent extends React.Component {
       progress: false,
       confirmOpen: false,
       confirmMessage: '',
+      newMessage: '',
       currentRoom: {}
     };
 
@@ -35,6 +36,10 @@ class MainContent extends React.Component {
     socket.on('new-user-connection', (connectedUsers) => {
       this.updateConnectedUsers(Object.keys(connectedUsers).map((key) => (connectedUsers[key])));
     });
+
+    socket.on('new-message', (message) => {
+      this.updateMessageList(message);
+    });
   }
 
   componentDidMount() {
@@ -42,13 +47,13 @@ class MainContent extends React.Component {
     this.getChatRoomList();
   }
 
-  getChatRoomList () {
+  getChatRoomList() {
     $ajax({
       url: 'room',
       method: 'GET',
     })
     .then((chatRoomList) => {
-      this.setState({chatRoomList});
+      this.setState({chatRoomList, currentRoom: chatRoomList[0]});
     })
     .catch((err) => {
       console.log(err);
@@ -67,20 +72,68 @@ class MainContent extends React.Component {
     this.setState({[field]: evt.target.value});
   }
 
+  handleMessageSend(evt) {
+    if(evt.key === 'Enter' && this.state.newMessage) {
+      let data = {
+        room: this.state.currentRoom.id,
+        from: this.props.location.state.id,
+        message: this.state.newMessage
+      };
+
+      $ajax({
+        url: 'message',
+        method: 'POST',
+        body: data
+      })
+      .then((message) => {
+        this.setState({newMessage: ''});
+        console.log(message);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    }
+  }
+
+  updateMessageList(message) {
+    if(this.state[message.room]) {
+      this.setState({[message.room]: update(this.state[message.room], { $push: [message] })});
+    }else {
+      this.state[message.room] = [].push(message);
+    }
+  }
+
   setProgress(progress) {
     this.setState({progress});
   }
 
   showConfirmation(message) {
     this.setState({confirmOpen: true, confirmMessage: message});
+    setTimeout(function () {
+      this.setState({confirmOpen: false, confirmMessage: ''});
+    }.bind(this), 4000);
   }
 
   handleRoomClick(room) {
-    console.log(room);
+    if(!this.state[room.id]) {
+      $ajax({
+        url: 'message',
+        method: 'GET',
+        header: {
+          room: room.id
+        }
+      })
+      .then((messages) => {
+        this.setState({[room.id]: messages});
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+    }
     this.setState({currentRoom: room});
   }
 
-  handleSubmit() {
+  handleRoomSubmit() {
     $ajax({
       url: 'room',
       method: 'POST',
@@ -107,7 +160,9 @@ class MainContent extends React.Component {
   render() {
     return (
       <Main
+        state={this.state}
         progress={this.state.progress}
+        newMessage={this.state.newMessage}
         createRoom={this.state.createRoom}
         currentRoom={this.state.currentRoom}
         confirmOpen={this.state.confirmOpen}
@@ -115,8 +170,9 @@ class MainContent extends React.Component {
         confirmMessage={this.state.confirmMessage}
         connectedUsers={this.state.connectedUsers}
         handleChange={this.handleChange.bind(this)}
-        handleSubmit={this.handleSubmit.bind(this)}
         handleRoomClick={this.handleRoomClick.bind(this)}
+        handleRoomSubmit={this.handleRoomSubmit.bind(this)}
+        handleMessageSend={this.handleMessageSend.bind(this)}
         handleCreateRoomOpen={this.handleCreateRoomOpen.bind(this)} />
     )
   }
