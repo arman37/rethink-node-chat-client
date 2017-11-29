@@ -5,17 +5,19 @@
  */
 'use strict';
 
-import React, {Component} from 'react';
+import React from 'react';
+import api from '../../utility/api';
 import PropTypes from 'prop-types';
+import utils from '../../utility/utils';
 import LoginPage from '../representational/login-page.component';
 
-class LoginContainer extends Component {
-    constructor() {
-        super(...arguments);
-        this.state = {
-            username: '',
-            password: ''
-        };
+class LoginContainer extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+          username: '',
+          password: ''
+      };
     }
 
     handleChange(field, evt) {
@@ -23,32 +25,39 @@ class LoginContainer extends Component {
     }
 
     handleSubmit(e) {
-        e.preventDefault();
-        this.context.router.history.push('/main', {id: this.state.password});
-        // fetch(`${API_URL}/login`, {
-        //     method: 'GET',
-        //     headers: API_HEADERS,
-        //     body: JSON.stringify(this.state)
-        // })
-        // .then((response) => {
-        //     if(response.ok) this.context.router.push('/dashboard');
-        //     else {
-        //         throw new Error("Server response wasn't OK")
-        //     }
-        // })
-        // .catch((error) => {
-        //
-        // });
+      e.preventDefault();
+
+      let { username, password } = this.state;
+
+      if (!username || !password) return;
+
+      api
+        .handleLogin(username, password)
+        .then((token) => {
+          utils.setToken(response.token);
+          let user = utils.parseJwt(response.token);
+          this.context.router.history.push('/main', {id: user.id});
+        })
+        .catch((error) => {
+          console.log('login failed...');
+        });
+
+      this.setState({ username: '', password: ''});
+    }
+
+    goToSignUpPage() {
+      this.context.router.history.push('/sign-up');
     }
 
     render() {
-        return (
-            <LoginPage
-              handleChange={this.handleChange.bind(this)}
-              handleSubmit={this.handleSubmit.bind(this)} />
-        );
+      return (
+        <LoginPage
+          handleChange={this.handleChange.bind(this)}
+          handleSubmit={this.handleSubmit.bind(this)}
+          goToSignUpPage={this.goToSignUpPage.bind(this)} />
+      );
     }
-};
+}
 
 LoginContainer.contextTypes = {
     router: PropTypes.object.isRequired
