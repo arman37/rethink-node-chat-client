@@ -11,6 +11,12 @@ import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 
+/**
+ *
+ * @param {function} handleSubmit
+ * @param {function} handleChange
+ * @constructor
+ */
 const LoginForm = ({handleSubmit, handleChange}) => (
   <Paper className="login-form-wrapper" zDepth={5}>
     <Logo></Logo>
