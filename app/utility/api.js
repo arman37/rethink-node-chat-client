@@ -78,8 +78,31 @@ function getChatRoomList() {
   );
 }
 
+/**
+ * Handle message send.
+ *
+ * @param username
+ * @param password
+ * @returns {Promise.<TResult>}
+ */
+function sendMessage(data) {
+  return (
+    $ajax({
+      url: 'message',
+      method: 'POST',
+      body: data
+    })
+      .then(response => response)
+      .catch((error) => {
+        console.log(error);
+        throw error;
+      })
+  );
+}
+
 export default {
   handleLogin,
   handleSignUp,
+  sendMessage,
   getChatRoomList
 };
