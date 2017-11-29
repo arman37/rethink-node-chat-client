@@ -24,7 +24,7 @@ class App extends React.Component {
         <Router>
           <Switch>
             <Route exact name="login" path="/" component={LoginContainer} />
-            <Route exact name="signup" path="/signup" component={SignUpContainer} />
+            <Route exact name="signup" path="/sign-up" component={SignUpContainer} />
             <Route exact name="main" path="/main" component={MainContent} />
           </Switch>
         </Router>
