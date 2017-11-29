@@ -59,7 +59,27 @@ function handleSignUp(username, password) {
   );
 }
 
+/**
+ * get chat room list of user.
+ *
+ * @returns {Promise.<TResult>}
+ */
+function getChatRoomList() {
+  return (
+    $ajax({
+      url: 'room',
+      method: 'GET'
+    })
+    .then(response => response)
+    .catch((error) => {
+      console.log(error);
+      throw error;
+    })
+  );
+}
+
 export default {
   handleLogin,
-  handleSignUp
+  handleSignUp,
+  getChatRoomList
 };
