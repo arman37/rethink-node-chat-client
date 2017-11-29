@@ -7,7 +7,6 @@
 
 import React from 'react';
 import Logo from './logo.component';
-import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 
@@ -18,7 +17,7 @@ import RaisedButton from 'material-ui/RaisedButton';
  * @constructor
  */
 const LoginForm = ({handleSubmit, handleChange}) => (
-  <Paper className="login-form-wrapper" zDepth={5}>
+  <div>
     <Logo></Logo>
     <form onSubmit={handleSubmit.bind(null)}>
       <TextField
@@ -43,7 +42,7 @@ const LoginForm = ({handleSubmit, handleChange}) => (
         className="form-input-wrapper login-button"
       /><br/>
     </form>
-  </Paper>
+  </div>
 );
 
 export default LoginForm;
