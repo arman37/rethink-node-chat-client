@@ -6,52 +6,56 @@
 'use strict';
 
 import React from 'react';
-import $ajax from '../../utility';
 import PropTypes from 'prop-types';
+import api from '../../utility/api';
+import utils from '../../utility/utils';
 import SignUpPage from '../representational/signup-page.component';
 
 class SignUpContainer extends React.Component {
-    constructor() {
-        super(...arguments);
-        this.state = {
-            username: '',
-            password: ''
-        };
+    constructor(props) {
+      super(props);
+      this.state = {
+          username: '',
+          password: ''
+      };
     }
 
     handleChange(field, evt) {
-        this.setState({[field]: evt.target.value});
+      this.setState({[field]: evt.target.value});
     }
 
     handleSubmit(e) {
-        e.preventDefault();
-        $ajax({
-          url: 'sign-up',
-          method: 'POST',
-          body: {
-            username: this.state.username,
-            password: this.state.password
-          }
-        })
+      e.preventDefault();
+
+      let { username, password } = this.state;
+
+      if (!username || !password) return;
+
+      api
+        .handleSignUp(username, password)
         .then((response) => {
-            this.context.router.history.push('/');
+          utils.setToken(response.token);
+          let user = utils.parseJwt(response.token);
+          this.context.router.history.push('/main', {id: user.id});
         })
-        .catch((err) => {
-            console.log(err);
+        .catch((error) => {
+          console.log('sign-up failed...');
         });
+
+      this.setState({ username: '', password: ''});
     }
 
     render() {
-        return (
-            <SignUpPage
-                handleChange={this.handleChange.bind(this)}
-                handleSubmit={this.handleSubmit.bind(this)} />
-        );
+      return (
+        <SignUpPage
+          handleChange={this.handleChange.bind(this)}
+          handleSubmit={this.handleSubmit.bind(this)} />
+      );
     }
-};
+}
 
 SignUpContainer.contextTypes = {
-    router: PropTypes.object.isRequired
+  router: PropTypes.object.isRequired
 };
 
 export default SignUpContainer;
