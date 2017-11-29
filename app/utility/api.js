@@ -34,6 +34,32 @@ function handleLogin(username, password) {
   );
 }
 
+/**
+ * Handle user sign-up.
+ *
+ * @param username
+ * @param password
+ * @returns {Promise.<TResult>}
+ */
+function handleSignUp(username, password) {
+  return (
+    $ajax({
+      url: 'users/actions/sign-up',
+      method: 'POST',
+      body: {
+        username: username,
+        password: password
+      }
+    })
+    .then(response => response)
+    .catch((error) => {
+      console.log(error);
+      throw error;
+    })
+  );
+}
+
 export default {
-  handleLogin
+  handleLogin,
+  handleSignUp
 };
