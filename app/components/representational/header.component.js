@@ -8,9 +8,14 @@
 import React from 'react';
 import Paper from 'material-ui/Paper';
 
-const Header = () => (
+/**
+ *
+ * @param {string} title
+ * @constructor
+ */
+const Header = ({title}) => (
   <Paper className="header-wrapper" zDepth={2}>
-    <h1>A RethinkDB chat application with React, NodeJS, HapiJS and socket.io</h1>
+    <h1>{title}</h1>
   </Paper>
 );
 
