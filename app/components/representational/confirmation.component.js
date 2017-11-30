@@ -8,6 +8,12 @@
 import React from 'react';
 import Snackbar from 'material-ui/Snackbar';
 
+/**
+ *
+ * @param {boolean} confirmOpen
+ * @param {string} confirmMessage
+ * @constructor
+ */
 const Confirmation = ({confirmOpen, confirmMessage}) => (
   <Snackbar
     open={confirmOpen}
