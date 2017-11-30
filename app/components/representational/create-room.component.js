@@ -10,12 +10,21 @@ import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 
-const CreateRoom = ({createRoom, handleCreateRoomOpen, handleChange, handleRoomSubmit}) => {
+/**
+ *
+ * @param {boolean} createRoom
+ * @param {function} toggleCreateRoomDialog
+ * @param {function} handleChange
+ * @param {function} handleRoomSubmit
+ * @returns {XML}
+ * @constructor
+ */
+const CreateRoom = ({createRoom, toggleCreateRoomDialog, handleChange, handleRoomSubmit}) => {
   let actions = [
     <FlatButton
       label="Cancel"
-      primary={true}
-      onTouchTap={handleCreateRoomOpen.bind(null, false)}
+      secondary={true}
+      onTouchTap={toggleCreateRoomDialog}
     />,
     <FlatButton
       label="Submit"
@@ -32,7 +41,7 @@ const CreateRoom = ({createRoom, handleCreateRoomOpen, handleChange, handleRoomS
         actions={actions}
         modal={false}
         open={createRoom}
-        onRequestClose={handleCreateRoomOpen.bind(null, false)}
+        onRequestClose={toggleCreateRoomDialog}
       >
         <TextField
           required={true}
