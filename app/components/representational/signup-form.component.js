@@ -10,6 +10,18 @@ import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 
+const styles = {
+  root: {
+    width: '30%',
+    margin: '10% auto 0 auto'
+  },
+  fields: {
+    margin: '0 0 0 15%',
+  },
+  btn: {
+    margin: '3% 0 2% 35%'
+  }
+};
 /**
  *
  * @param {function} handleSubmit
@@ -17,29 +29,26 @@ import RaisedButton from 'material-ui/RaisedButton';
  * @constructor
  */
 const SignUpForm = ({handleSubmit, handleChange}) => (
-  <Paper className="login-form-wrapper" zDepth={5}>
+  <Paper className="login-form-wrapper" zDepth={5} style={styles.root}>
     <form onSubmit={handleSubmit.bind(null)}>
       <TextField
           hintText="typeAnythingAsUsername&Password@gmail.com"
           floatingLabelText="Username"
           autoFocus={true}
           required={true}
-          onChange={handleChange.bind(null, 'username')}
-          className="form-input-wrapper"
-      /><br/>
+          style={styles.fields}
+          onChange={handleChange.bind(null, 'username')} /><br/>
       <TextField
           hintText=""
           floatingLabelText="Password"
           type="password"
           required={true}
-          onChange={handleChange.bind(null, 'password')}
-          className="form-input-wrapper"
-      /><br/>
+          style={styles.fields}
+          onChange={handleChange.bind(null, 'password')} /><br/>
       <RaisedButton
           label="Submit"
           type="submit"
-          className="form-input-wrapper login-button"
-      /><br/>
+          style={styles.btn} /><br/>
     </form>
   </Paper>
 );
