@@ -10,6 +10,17 @@ import Logo from './logo.component';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 
+const styles = {
+  root: {
+
+  },
+  fields: {
+    margin: '0 0 0 15%',
+  },
+  loginBtn: {
+    margin: '3% 0 2% 35%'
+  }
+};
 /**
  *
  * @param {function} handleSubmit
@@ -18,29 +29,26 @@ import RaisedButton from 'material-ui/RaisedButton';
  */
 const LoginForm = ({handleSubmit, handleChange}) => (
   <div>
-    <Logo></Logo>
+    <Logo />
     <form onSubmit={handleSubmit.bind(null)}>
       <TextField
         hintText="typeAnythingAsUsername&Password@gmail.com"
         floatingLabelText="Username"
         autoFocus={true}
         required={true}
-        onChange={handleChange.bind(null, 'username')}
-        className="form-input-wrapper"
-      /><br/>
+        style={styles.fields}
+        onChange={handleChange.bind(null, 'username')} /><br/>
       <TextField
         hintText=""
         floatingLabelText="Password"
         type="password"
         required={true}
-        onChange={handleChange.bind(null, 'password')}
-        className="form-input-wrapper"
-      /><br/>
+        style={styles.fields}
+        onChange={handleChange.bind(null, 'password')} /><br/>
       <RaisedButton
         label="Login"
         type="submit"
-        className="form-input-wrapper login-button"
-      /><br/>
+        style={styles.loginBtn} /><br/>
     </form>
   </div>
 );
