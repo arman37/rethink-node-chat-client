@@ -40,6 +40,7 @@ class SignUpContainer extends React.Component {
         })
         .catch((error) => {
           console.log('sign-up failed...');
+          window.alert(error.message);
         });
 
       this.setState({ username: '', password: ''});
