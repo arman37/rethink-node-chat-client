@@ -8,7 +8,7 @@ import React from 'react';
 
 const styles = {
   root: {
-    textAlign: 'center'
+    padding: '10px'
   }
 };
 /**
