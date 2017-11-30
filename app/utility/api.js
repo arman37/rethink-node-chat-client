@@ -120,10 +120,36 @@ function getMessage(roomId) {
   );
 }
 
+/**
+ * Handle room submit.
+ *
+ * @param name
+ * @param creatorId
+ * @returns {Promise.<TResult>}
+ */
+function createNewRoom(name, creatorId) {
+  return (
+    $ajax({
+      url: 'room',
+      method: 'POST',
+      body: {
+        name: name,
+        created_by: creatorId
+      }
+    })
+    .then(response => response)
+    .catch((error) => {
+      console.log(error);
+      throw error;
+    })
+  );
+}
+
 export default {
   handleLogin,
   handleSignUp,
   sendMessage,
   getMessage,
+  createNewRoom,
   getChatRoomList
 };
