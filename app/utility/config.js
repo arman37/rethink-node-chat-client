@@ -8,5 +8,6 @@
 
 export default {
   api_version: 'api/v1',
-  host: 'http://127.0.0.1:3030'
+  host: 'http://127.0.0.1:3030',
+  socket: 'http://127.0.0.1:5000'
 }
