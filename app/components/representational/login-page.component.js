@@ -10,6 +10,13 @@ import Header from './header.component';
 import Paper from 'material-ui/Paper';
 import LoginForm from './login-form.component';
 
+const styles = {
+  root: {},
+  form: {
+    width: '30%',
+    margin: '10% auto 0 auto'
+  }
+};
 /**
  *
  * @param {function} handleSubmit
@@ -20,7 +27,7 @@ import LoginForm from './login-form.component';
 const LoginPage = ({handleSubmit, handleChange, goToSignUpPage}) => (
   <div>
     <Header title='A RethinkDB chat application with React, NodeJS, HapiJS and socket.io' />
-    <Paper className="login-form-wrapper" zDepth={5}>
+    <Paper className="login__form__wrapper" zDepth={5} style={styles.form}>
       <LoginForm
         handleChange={handleChange}
         handleSubmit={handleSubmit} />
