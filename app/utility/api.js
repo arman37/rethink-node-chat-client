@@ -100,9 +100,30 @@ function sendMessage(data) {
   );
 }
 
+/**
+ * Get messages for a particular room.
+ *
+ * @param roomId
+ * @returns {Promise.<TResult>}
+ */
+function getMessage(roomId) {
+  return (
+    $ajax({
+      url: `message?roomId=${roomId}`,
+      method: 'GET',
+    })
+    .then(response => response)
+    .catch((error) => {
+      console.log(error);
+      throw error;
+    })
+  );
+}
+
 export default {
   handleLogin,
   handleSignUp,
   sendMessage,
+  getMessage,
   getChatRoomList
 };
