@@ -33,13 +33,14 @@ class LoginContainer extends React.Component {
 
       api
         .handleLogin(username, password)
-        .then((token) => {
+        .then((response) => {
           utils.setToken(response.token);
           let user = utils.parseJwt(response.token);
           this.context.router.history.push('/main', {id: user.id});
         })
         .catch((error) => {
           console.log('login failed...');
+          window.alert(error.message);
         });
 
       this.setState({ username: '', password: ''});
