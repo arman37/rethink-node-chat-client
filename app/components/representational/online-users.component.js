@@ -6,6 +6,7 @@
 'use strict';
 import React from 'react';
 import Title from './title.component';
+import utils from '../../utility/utils';
 import {List, ListItem} from 'material-ui/List';
 import Face from 'material-ui/svg-icons/action/face';
 
@@ -15,6 +16,9 @@ const styles = {
     display: 'inline-block',
     float: 'left',
     borderStyle: 'inset'
+  },
+  self: {
+    color: 'green'
   }
 };
 
@@ -24,17 +28,26 @@ const styles = {
  * @param {string} className
  * @constructor
  */
-const UserList = ({connectedUsers, className}) => (
-  <div className={className} style={styles.root}>
-    <Title title='Online Users' className='online__users' />
-    <List>
-      {
-        connectedUsers.map((user, index) => (
-          <ListItem primaryText={user.username} leftIcon={<Face />} key={index} />
-        ))
-      }
-    </List>
-  </div>
-);
+const UserList = ({connectedUsers, className}) => {
+  let userId = utils.parseJwt(utils.getToken()).id;
+
+  return (
+    <div className={className} style={styles.root}>
+      <Title title='Online Users' className='online__users' />
+      <List>
+        {
+          connectedUsers.map((user, index) => (
+            <ListItem primaryText={
+              <div>
+                <span>{user.id === userId ? <span style={styles.self}>You({user.username})</span> : user.username}</span>
+              </div>
+            }
+            leftIcon={<Face />} key={index} />
+          ))
+        }
+      </List>
+    </div>
+  );
+};
 
 export default UserList;
