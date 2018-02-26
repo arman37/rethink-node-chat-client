@@ -46,7 +46,7 @@ const MessageList = ({state, currentRoom, className}) => {
             <ListItem 
               primaryText={
                 <div>
-                  <span style={styles.author}>{message.user.username}{message.user.id === userId ? <span style={styles.self}>(you)</span> : ''}: </span>
+                  <span style={styles.author}>{message.user.id === userId ? <span style={styles.self}>You({message.user.username})</span> : message.user.username}: </span>
                   <span>{message.message}</span>
                   <span style={styles.time}>({utils.toMomentCalendarDate(message.createdAt)})</span>
                 </div>
