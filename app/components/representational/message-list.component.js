@@ -6,6 +6,7 @@
 'use strict';
 
 import React from 'react';
+import utils from '../../utility/utils';
 import {List, ListItem} from 'material-ui/List';
 import Face from 'material-ui/svg-icons/action/face';
 
@@ -14,6 +15,13 @@ const styles = {
     width: '100%',
     height: '88%',
     overflowY: 'scroll'
+  },
+  author: {
+    fontSize: 16,
+    fontWeight: 'bold'
+  },
+  time: {
+    float: 'right'
   }
 };
 
@@ -29,7 +37,15 @@ const MessageList = ({state, currentRoom, className}) => (
     <List>
       {
         state && state[currentRoom.id] && state[currentRoom.id].map((message, index) => (
-          <ListItem primaryText={`${message.user.username}: ${message.message} (at ${message.createdAt})`} leftIcon={<Face />} key={index} />
+          <ListItem 
+            primaryText={
+              <div>
+                <span style={styles.author}>{message.user.username}: </span>
+                <span>{message.message}</span>
+                <span style={styles.time}>({utils.toMomentCalendarDate(message.createdAt)})</span>
+              </div>
+            }
+            leftIcon={<Face />} key={index} />
         ))
       }
     </List>
