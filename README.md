@@ -14,8 +14,8 @@ HOW TO RUN
 ========
 1. Before this you will have to configure the backend server i have developed with NodeJS and RethinkDB at 'https://github.com/arman37/rethink-node-chat-server'
 2. Clone the project from git.
-3. Go to 'rethink-node-chat-client' directory.
-4. Run 'yarn' or 'npm install'.
-5. Run 'npm start'.
+3. Go to 'rethink-node-chat-client' directory ( `cd rethink-node-chat-client` ).
+4. Run `yarn` or `npm install`.
+5. Run `npm start`.
 
-Application will start at 'http://localhost:4000'.
+Application will start at 'http://localhost:4000'. Open a new tab on your web browser and enter address http://localhost:4000 .
