@@ -19,6 +19,7 @@
     "babel-polyfill": "^6.23.0",
     "history": "^4.6.1",
     "material-ui": "^0.18.1",
+    "moment": "^2.20.1",
     "prop-types": "^15.5.10",
     "react": "^15.5.4",
     "react-addons-update": "^15.5.2",
