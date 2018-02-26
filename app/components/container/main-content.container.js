@@ -6,7 +6,7 @@
 'use strict';
 
 import React from 'react';
-import $ajax from '../../utility';
+import $ajax from '../../utility/ajax';
 import update from 'react-addons-update';
 import Main from '../representational/main-content.component';
 
