@@ -22,6 +22,9 @@ const styles = {
   },
   time: {
     float: 'right'
+  },
+  self: {
+    color: 'green'
   }
 };
 
@@ -32,24 +35,28 @@ const styles = {
  * @param {string} className
  * @constructor
  */
-const MessageList = ({state, currentRoom, className}) => (
-  <div className={className} style={styles.root}>
-    <List>
-      {
-        state && state[currentRoom.id] && state[currentRoom.id].map((message, index) => (
-          <ListItem 
-            primaryText={
-              <div>
-                <span style={styles.author}>{message.user.username}: </span>
-                <span>{message.message}</span>
-                <span style={styles.time}>({utils.toMomentCalendarDate(message.createdAt)})</span>
-              </div>
-            }
-            leftIcon={<Face />} key={index} />
-        ))
-      }
-    </List>
-  </div>
-);
+const MessageList = ({state, currentRoom, className}) => {
+  let userId = utils.parseJwt(utils.getToken()).id;
+
+  return (
+    <div className={className} style={styles.root}>
+      <List>
+        {
+          state && state[currentRoom.id] && state[currentRoom.id].map((message, index) => (
+            <ListItem 
+              primaryText={
+                <div>
+                  <span style={styles.author}>{message.user.username}{message.user.id === userId ? <span style={styles.self}>(you)</span> : ''}: </span>
+                  <span>{message.message}</span>
+                  <span style={styles.time}>({utils.toMomentCalendarDate(message.createdAt)})</span>
+                </div>
+              }
+              leftIcon={<Face />} key={index} />
+          ))
+        }
+      </List>
+    </div>
+  );
+};
 
 export default MessageList;
