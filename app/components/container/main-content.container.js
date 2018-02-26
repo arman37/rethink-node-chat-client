@@ -6,6 +6,7 @@
 'use strict';
 
 import React from 'react';
+import api from '../../utility/api'
 import $ajax from '../../utility/ajax';
 import update from 'react-addons-update';
 import Main from '../representational/main-content.component';
@@ -48,16 +49,18 @@ class MainContent extends React.Component {
   }
 
   getChatRoomList() {
-    $ajax({
-      url: 'room',
-      method: 'GET',
-    })
+    api
+    .getChatRoomList()
     .then((chatRoomList) => {
       this.setState({chatRoomList, currentRoom: chatRoomList[0]});
     })
     .catch((err) => {
       console.log(err);
     });
+  }
+
+  toggleCreateRoomDialog() {
+    this.setState({ createRoom: !this.state.createRoom });
   }
 
   updateConnectedUsers(connectedUsers) {
@@ -99,7 +102,9 @@ class MainContent extends React.Component {
     if(this.state[message.room]) {
       this.setState({[message.room]: update(this.state[message.room], { $push: [message] })});
     }else {
-      this.state[message.room] = [].push(message);
+      let newRoom = [];
+      newRoom.push(message);
+      this.setState({[message.room]: newRoom});
     }
   }
 
@@ -115,33 +120,21 @@ class MainContent extends React.Component {
   }
 
   handleRoomClick(room) {
-    if(!this.state[room.id]) {
-      $ajax({
-        url: 'message',
-        method: 'GET',
-        header: {
-          room: room.id
-        }
-      })
+    api
+      .getMessage(room.id)
       .then((messages) => {
         this.setState({[room.id]: messages});
       })
       .catch((err) => {
         console.log(err);
       })
-    }
+
     this.setState({currentRoom: room});
   }
 
   handleRoomSubmit() {
-    $ajax({
-      url: 'room',
-      method: 'POST',
-      body: {
-        name: this.state.roomName,
-        created_by: this.props.location.state.id
-      }
-    })
+    api
+    .createNewRoom(this.state.roomName, this.props.location.state.id)
     .then((room) => {
       let chatRoomList = update(this.state.chatRoomList, { $push: [room] });
       this.setState({chatRoomList});
@@ -173,7 +166,8 @@ class MainContent extends React.Component {
         handleRoomClick={this.handleRoomClick.bind(this)}
         handleRoomSubmit={this.handleRoomSubmit.bind(this)}
         handleMessageSend={this.handleMessageSend.bind(this)}
-        handleCreateRoomOpen={this.handleCreateRoomOpen.bind(this)} />
+        handleCreateRoomOpen={this.handleCreateRoomOpen.bind(this)}
+         toggleCreateRoomDialog={this.toggleCreateRoomDialog.bind(this)} />
     )
   }
 }
