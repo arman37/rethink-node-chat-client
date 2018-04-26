@@ -19,3 +19,11 @@ HOW TO RUN
 5. Run `npm start`.
 
 Application will start at 'http://localhost:4000'. Open a new tab on your web browser and enter address http://localhost:4000 .
+
+
+Preview
+========
+![Screenshot1](/screenshots/screenshot1.png)
+![Screenshot2](/screenshots/screenshot2.png)
+![Screenshot3](/screenshots/screenshot3.png)
+![Screenshot4](/screenshots/screenshot4.png)
