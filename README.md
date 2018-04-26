@@ -1,4 +1,4 @@
-# Rethink Node Chat Client.
+# Rethink Node Chat ReactJS Client.
 
 > A RethinkDB chat client with React.
 
@@ -27,3 +27,8 @@ Preview
 ![Screenshot2](/screenshots/screenshot2.png)
 ![Screenshot3](/screenshots/screenshot3.png)
 ![Screenshot4](/screenshots/screenshot4.png)
+
+
+### License
+
+[MIT licensed](./LICENSE)
