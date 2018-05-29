@@ -33,6 +33,8 @@ Preview
 ![Screenshot3](/screenshots/screenshot3.png)
 ![Screenshot4](/screenshots/screenshot4.png)
 
+### Contributing
+If you like the project, shoot a :star2: and feel free to fork & send PR anytime.
 
 ### License
 
