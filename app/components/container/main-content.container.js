@@ -12,6 +12,10 @@ import update from 'react-addons-update';
 import Main from '../representational/main-content.component';
 
 let socket;
+let yourConn;
+let stream;
+let conn;
+
 
 class MainContent extends React.Component {
   constructor() {
@@ -25,7 +29,9 @@ class MainContent extends React.Component {
       confirmOpen: false,
       confirmMessage: '',
       newMessage: '',
-      currentRoom: {}
+      currentRoom: {},
+      openCallDialog: false,
+      calleeName: ''
     };
 
     socket = io.connect('http://127.0.0.1:5000');
@@ -41,6 +47,51 @@ class MainContent extends React.Component {
     socket.on('new-message', (message) => {
       this.updateMessageList(message);
     });
+
+    //connecting to our signaling server
+    conn = new WebSocket('ws://localhost:9090');
+
+    conn.onopen = function () {
+      console.log("Connected to the signaling server");
+    };
+
+//when we got a message from a signaling server
+    conn.onmessage = function (msg) {
+      console.log("Got message", msg.data);
+
+      var data = JSON.parse(msg.data);
+
+      switch(data.type) {
+        case "login":
+          handleLogin(data.success);
+          break;
+        //when somebody wants to call us
+        case "offer":
+          handleOffer(data.offer, data.name);
+          break;
+        case "answer":
+          handleAnswer(data.answer);
+          break;
+        //when a remote peer sends an ice candidate to us
+        case "candidate":
+          handleCandidate(data.candidate);
+          break;
+        case "leave":
+          handleLeave();
+          break;
+        default:
+          break;
+      }
+    };
+
+    conn.onerror = function (err) {
+      console.log("Got error", err);
+    };
+
+  }
+
+  send(message) {
+    conn.send(JSON.stringify(message));
   }
 
   componentDidMount() {
@@ -61,6 +112,51 @@ class MainContent extends React.Component {
 
   toggleCreateRoomDialog() {
     this.setState({ createRoom: !this.state.createRoom });
+  }
+
+  toggleCallDialog() {
+    this.setState(() => ({ openCallDialog: !this.state.openCallDialog }), () => {
+      if (this.state.openCallDialog) {
+        let localVideo = document.querySelector('#localVideo');
+        let remoteVideo = document.querySelector('#remoteVideo');
+        //getting local video stream
+        navigator.webkitGetUserMedia({ video: true, audio: true }, (myStream) => {
+          stream = myStream;
+
+          //displaying local video stream on the page
+          localVideo.src = window.URL.createObjectURL(stream);
+
+          //using Google public stun server
+          var configuration = {
+            "iceServers": [{ "url": "stun:stun2.1.google.com:19302" }]
+          };
+
+          yourConn = new webkitRTCPeerConnection(configuration);
+
+          // setup stream listening
+          yourConn.addStream(stream);
+
+          //when a remote user adds stream to the peer connection, we display it
+          yourConn.onaddstream = (e) => {
+            remoteVideo.src = window.URL.createObjectURL(e.stream);
+          };
+
+          // Setup ice handling
+          yourConn.onicecandidate = (event) => {
+
+            // if (event.candidate) {
+            //   this.send({
+            //     type: "candidate",
+            //     candidate: event.candidate
+            //   });
+            // }
+          };
+
+        }, (error) => {
+          console.log(error);
+        });
+      }
+    });
   }
 
   updateConnectedUsers(connectedUsers) {
@@ -127,7 +223,7 @@ class MainContent extends React.Component {
       })
       .catch((err) => {
         console.log(err);
-      })
+      });
 
     this.setState({currentRoom: room});
   }
@@ -160,14 +256,16 @@ class MainContent extends React.Component {
         currentRoom={this.state.currentRoom}
         confirmOpen={this.state.confirmOpen}
         chatRoomList={this.state.chatRoomList}
+        openCallDialog={this.state.openCallDialog}
         confirmMessage={this.state.confirmMessage}
         connectedUsers={this.state.connectedUsers}
         handleChange={this.handleChange.bind(this)}
         handleRoomClick={this.handleRoomClick.bind(this)}
         handleRoomSubmit={this.handleRoomSubmit.bind(this)}
         handleMessageSend={this.handleMessageSend.bind(this)}
+        toggleCallDialog={this.toggleCallDialog.bind(this)}
         handleCreateRoomOpen={this.handleCreateRoomOpen.bind(this)}
-         toggleCreateRoomDialog={this.toggleCreateRoomDialog.bind(this)} />
+        toggleCreateRoomDialog={this.toggleCreateRoomDialog.bind(this)} />
     )
   }
 }

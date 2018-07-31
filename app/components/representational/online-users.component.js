@@ -9,10 +9,12 @@ import Title from './title.component';
 import utils from '../../utility/utils';
 import {List, ListItem} from 'material-ui/List';
 import Face from 'material-ui/svg-icons/action/face';
+import RaisedButton from 'material-ui/RaisedButton';
 
 const styles = {
   root: {
     width: '20%',
+    minHeight: '150px',
     display: 'inline-block',
     float: 'left',
     borderStyle: 'inset'
@@ -28,7 +30,7 @@ const styles = {
  * @param {string} className
  * @constructor
  */
-const UserList = ({connectedUsers, className}) => {
+const UserList = ({connectedUsers, toggleCallDialog, className}) => {
   let userId = utils.parseJwt(utils.getToken()).id;
 
   return (
@@ -46,6 +48,9 @@ const UserList = ({connectedUsers, className}) => {
           ))
         }
       </List>
+      <div style={{display: "block", marginLeft: "10px", marginBottom: "10px"}}>
+        <RaisedButton label="Initiate Call" onTouchTap={toggleCallDialog}/>
+      </div>
     </div>
   );
 };

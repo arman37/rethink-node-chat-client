@@ -11,11 +11,12 @@ import UserList from './online-users.component';
 import Messages from './messages.component';
 import CreateRoom from './create-room-dialog.component';
 import Confirmation from './confirmation.component';
+import CallDialog from './call-dialog';
 
 const MainContent = (props) => {
   let {
     state, progress, newMessage, chatRoomList, currentRoom, createRoom, handleChange, handleMessageSend, handleRoomClick,
-    confirmOpen, confirmMessage, handleRoomSubmit, connectedUsers, toggleCreateRoomDialog
+    confirmOpen, confirmMessage, handleRoomSubmit, connectedUsers, toggleCreateRoomDialog, openCallDialog, toggleCallDialog
   } = props;
 
   return (
@@ -23,7 +24,8 @@ const MainContent = (props) => {
       <div className="list__view">
         <UserList
           className='online__users'
-          connectedUsers={connectedUsers} />
+          connectedUsers={connectedUsers}
+          toggleCallDialog={toggleCallDialog} />
         <Messages
           state={state}
           className='messages'
@@ -38,6 +40,10 @@ const MainContent = (props) => {
           handleRoomClick={handleRoomClick}
           toggleCreateRoomDialog={toggleCreateRoomDialog} />
       </div>
+      <CallDialog
+        handleChange={handleChange}
+        openCallDialog={openCallDialog}
+        toggleCallDialog={toggleCallDialog} />
       <CreateRoom
         createRoom={createRoom}
         handleChange={handleChange}
