@@ -5,7 +5,10 @@ var webpack = require('webpack');
  */
 var config = {
   devtool: 'eval-source-map',
-  entry:  __dirname + "/app/app.js",
+  entry: [
+    'react-hot-loader/patch',
+    __dirname + "/app/app.js",
+  ],
   output: {
     path: __dirname + "/public",
     filename: "bundle.js"
@@ -24,9 +27,13 @@ var config = {
     contentBase: "./public",
     colors: true,
     historyApiFallback: true,
-    inline: true
+    inline: true,
+    hot: true
   },
-}
+  plugins: [
+    new webpack.HotModuleReplacementPlugin()
+  ]
+};
 
 /*
  * If bundling for production, optimize output
@@ -40,6 +47,6 @@ if (process.env.NODE_ENV === 'production') {
       'process.env': {NODE_ENV: JSON.stringify('production')}
     })
   ];
-};
+}
 
 module.exports = config;
