@@ -42,6 +42,7 @@ const UserList = ({connectedUsers, toggleCallDialog, className}) => {
             <ListItem primaryText={
               <div>
                 <span>{user.id === userId ? <span style={styles.self}>You({user.username})</span> : user.username}</span>
+                <RaisedButton label="Call" onTouchTap={toggleCallDialog.bind(null, user.username)} style={{marginLeft: '50px'}} />
               </div>
             }
             leftIcon={<Face />} key={index} />

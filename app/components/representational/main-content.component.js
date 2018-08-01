@@ -15,8 +15,8 @@ import CallDialog from './call-dialog';
 
 const MainContent = (props) => {
   let {
-    state, progress, newMessage, chatRoomList, currentRoom, createRoom, handleChange, handleMessageSend, handleRoomClick,
-    confirmOpen, confirmMessage, handleRoomSubmit, connectedUsers, toggleCreateRoomDialog, openCallDialog, toggleCallDialog
+    state, progress, newMessage, chatRoomList, currentRoom, createRoom, handleChange, handleMessageSend, handleRoomClick, initiateCall,
+    confirmOpen, confirmMessage, handleRoomSubmit, connectedUsers, toggleCreateRoomDialog, openCallDialog, toggleCallDialog, calleeName, hangup
   } = props;
 
   return (
@@ -41,7 +41,10 @@ const MainContent = (props) => {
           toggleCreateRoomDialog={toggleCreateRoomDialog} />
       </div>
       <CallDialog
+        hangup={hangup}
+        calleeName={calleeName}
         handleChange={handleChange}
+        initiateCall={initiateCall}
         openCallDialog={openCallDialog}
         toggleCallDialog={toggleCallDialog} />
       <CreateRoom

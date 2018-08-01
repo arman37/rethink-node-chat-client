@@ -9,6 +9,7 @@ import React from 'react';
 import api from '../../utility/api'
 import $ajax from '../../utility/ajax';
 import update from 'react-addons-update';
+import utils from '../../utility/utils';
 import Main from '../representational/main-content.component';
 
 let socket;
@@ -31,7 +32,8 @@ class MainContent extends React.Component {
       newMessage: '',
       currentRoom: {},
       openCallDialog: false,
-      calleeName: ''
+      calleeName: '',
+      caller: ''
     };
 
     socket = io.connect('http://127.0.0.1:5000');
@@ -48,50 +50,47 @@ class MainContent extends React.Component {
       this.updateMessageList(message);
     });
 
-    //connecting to our signaling server
-    conn = new WebSocket('ws://localhost:9090');
+    //when we got an ice candidate from a remote user
+    socket.on('candidate', (data) => {
+      yourConn.addIceCandidate(new RTCIceCandidate(data.candidate));
+    });
 
-    conn.onopen = function () {
-      console.log("Connected to the signaling server");
-    };
+    //create an answer to an offer
+    socket.on('offer', (data) => {
+      yourConn.setRemoteDescription(new RTCSessionDescription(data.offer));
 
-//when we got a message from a signaling server
-    conn.onmessage = function (msg) {
-      console.log("Got message", msg.data);
+      //create an answer to an offer
+      yourConn.createAnswer((answer) => {
+        yourConn.setLocalDescription(answer);
 
-      var data = JSON.parse(msg.data);
+        this.send('answer', {
+          answer: answer,
+          caller: data.caller
+        });
 
-      switch(data.type) {
-        case "login":
-          handleLogin(data.success);
-          break;
-        //when somebody wants to call us
-        case "offer":
-          handleOffer(data.offer, data.name);
-          break;
-        case "answer":
-          handleAnswer(data.answer);
-          break;
-        //when a remote peer sends an ice candidate to us
-        case "candidate":
-          handleCandidate(data.candidate);
-          break;
-        case "leave":
-          handleLeave();
-          break;
-        default:
-          break;
-      }
-    };
+      }, (error) => {
+        alert("Error when creating an answer");
+      });
 
-    conn.onerror = function (err) {
-      console.log("Got error", err);
-    };
+      this.setState({ caller: data.caller });
+    });
 
+    socket.on('answer', (data) => {
+      yourConn.setRemoteDescription(new RTCSessionDescription(data.answer));
+    });
+
+    socket.on('leave', () => {
+      this.handleLeave();
+    });
   }
 
-  send(message) {
-    conn.send(JSON.stringify(message));
+  send(type, message) {
+    let callee = this.state.calleeName;
+    if (callee) {
+      message.callee = callee;
+    }
+
+    socket.emit(type, message);
   }
 
   componentDidMount() {
@@ -114,8 +113,8 @@ class MainContent extends React.Component {
     this.setState({ createRoom: !this.state.createRoom });
   }
 
-  toggleCallDialog() {
-    this.setState(() => ({ openCallDialog: !this.state.openCallDialog }), () => {
+  toggleCallDialog(calleeName) {
+    this.setState(() => ({ openCallDialog: !this.state.openCallDialog, calleeName: calleeName || '' }), () => {
       if (this.state.openCallDialog) {
         let localVideo = document.querySelector('#localVideo');
         let remoteVideo = document.querySelector('#remoteVideo');
@@ -127,7 +126,7 @@ class MainContent extends React.Component {
           localVideo.src = window.URL.createObjectURL(stream);
 
           //using Google public stun server
-          var configuration = {
+          let configuration = {
             "iceServers": [{ "url": "stun:stun2.1.google.com:19302" }]
           };
 
@@ -143,13 +142,12 @@ class MainContent extends React.Component {
 
           // Setup ice handling
           yourConn.onicecandidate = (event) => {
-
-            // if (event.candidate) {
-            //   this.send({
-            //     type: "candidate",
-            //     candidate: event.candidate
-            //   });
-            // }
+            if (event.candidate) {
+              this.send('candidate', {
+                caller: utils.parseJwt(utils.getToken()).username,
+                candidate: event.candidate
+              });
+            }
           };
 
         }, (error) => {
@@ -157,6 +155,39 @@ class MainContent extends React.Component {
         });
       }
     });
+  }
+
+  initiateCall() {
+    let calleeName = this.state.calleeName;
+    if (!!calleeName) {
+      // create an offer
+      yourConn.createOffer((offer) => {
+        this.send('offer', {
+          caller: utils.parseJwt(utils.getToken()).username,
+          offer: offer
+        });
+
+        yourConn.setLocalDescription(offer);
+
+      }, (error) => {
+        alert("Error when creating an offer");
+      });
+    }
+  }
+
+  hangup() {
+    this.send('leave', { name: this.state.calleeName || this.state.caller });
+    this.handleLeave();
+    this.toggleCallDialog();
+  }
+
+  handleLeave() {
+    document.querySelector('#remoteVideo').src = null;
+    yourConn.close();
+    yourConn.onicecandidate = null;
+    yourConn.onaddstream = null;
+
+    this.setState({ calleeName: '', caller: '' });
   }
 
   updateConnectedUsers(connectedUsers) {
@@ -247,9 +278,12 @@ class MainContent extends React.Component {
   }
 
   render() {
+    let { calleeName, progress, newMessage} = this.state;
+
     return (
       <Main
         state={this.state}
+        calleeName={calleeName}
         progress={this.state.progress}
         newMessage={this.state.newMessage}
         createRoom={this.state.createRoom}
@@ -259,6 +293,8 @@ class MainContent extends React.Component {
         openCallDialog={this.state.openCallDialog}
         confirmMessage={this.state.confirmMessage}
         connectedUsers={this.state.connectedUsers}
+        hangup={this.hangup.bind(this)}
+        initiateCall={this.initiateCall.bind(this)}
         handleChange={this.handleChange.bind(this)}
         handleRoomClick={this.handleRoomClick.bind(this)}
         handleRoomSubmit={this.handleRoomSubmit.bind(this)}

@@ -10,7 +10,7 @@ import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 
-const CallDialog = ({openCallDialog, toggleCallDialog, handleChange, handleCallClick}) => {
+const CallDialog = ({calleeName, openCallDialog, initiateCall, toggleCallDialog, handleChange, hangup}) => {
   let actions = [
     <FlatButton
       label="Close"
@@ -34,20 +34,20 @@ const CallDialog = ({openCallDialog, toggleCallDialog, handleChange, handleCallC
           <video id = "remoteVideo" autoPlay></video>
         </div>
         <TextField
+          value={calleeName}
           required={true}
           hintText="callee name..."
-          onChange={handleChange.bind(null, 'calleeName')}/>
+          onChange={handleChange.bind(null, 'calleeName')} />
         <FlatButton
-          label="Call"
+          label='Call'
           primary={true}
+          disabled={!calleeName}
           keyboardFocused={true}
-          onTouchTap={handleCallClick}
-        />
+          onTouchTap={initiateCall} />
         <FlatButton
-          label="HangUp"
-          primary={true}
-          onTouchTap={handleCallClick}
-        />
+          label='HangUp'
+          secondary={true}
+          onTouchTap={hangup} />
       </Dialog>
     </div>
   );
